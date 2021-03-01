@@ -7,7 +7,11 @@ jobs:
     name: Build our App
     runs-on: ubuntu-latest
     steps:
+      - name: Pull Code
+        uses: actions/checkout@v2
+        
       - name: print Current directory
         run: pwd
+        
       - name: list files in directory
         run: ls
