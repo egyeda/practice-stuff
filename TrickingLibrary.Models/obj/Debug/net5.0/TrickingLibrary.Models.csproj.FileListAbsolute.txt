@@ -1,0 +1,12 @@
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\bin\Debug\net5.0\TrickingLibrary.Models.deps.json
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\bin\Debug\net5.0\TrickingLibrary.Models.dll
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\bin\Debug\net5.0\ref\TrickingLibrary.Models.dll
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\bin\Debug\net5.0\TrickingLibrary.Models.pdb
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\obj\Debug\net5.0\TrickingLibrary.Models.csprojAssemblyReference.cache
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\obj\Debug\net5.0\TrickingLibrary.Models.GeneratedMSBuildEditorConfig.editorconfig
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\obj\Debug\net5.0\TrickingLibrary.Models.AssemblyInfoInputs.cache
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\obj\Debug\net5.0\TrickingLibrary.Models.AssemblyInfo.cs
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\obj\Debug\net5.0\TrickingLibrary.Models.csproj.CoreCompileInputs.cache
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\obj\Debug\net5.0\TrickingLibrary.Models.dll
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\obj\Debug\net5.0\ref\TrickingLibrary.Models.dll
+D:\Enetix\Work\Rider\TrickingLibrary\TrickingLibrary.Models\obj\Debug\net5.0\TrickingLibrary.Models.pdb
