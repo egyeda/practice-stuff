@@ -63,15 +63,7 @@ const initState = () => ({
 export default {
   name: "trick-steps",
   data: initState,
-  watch: {
-    'active': function (newValue) {
-      if (!newValue) {
-        Object.assign(this.$data, initState())
-      }
-    }
-  },
   computed: {
-    ...mapState('video-upload', ['active']),
     ...mapGetters('tricks', ['difficultyItems', 'categoryItems', 'trickItems']),
   },
   methods: {

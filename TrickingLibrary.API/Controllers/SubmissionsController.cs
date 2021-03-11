@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TrickingLibrary.API.BackgroundServices;
+using TrickingLibrary.API.BackgroundServices.VideoEditing;
 using TrickingLibrary.Data;
 using TrickingLibrary.Models;
 
@@ -19,7 +24,9 @@ namespace TrickingLibrary.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Submission> All() => _ctx.Submissions.ToList();
+        public IEnumerable<Submission> All() => _ctx.Submissions
+                                                    .Where(x => x.VideoProcessed)    
+                                                    .ToList();
         
         [HttpGet("{id}")]
         public Submission Get(int id) => _ctx.Submissions.FirstOrDefault(t => t.Id.Equals(id));
@@ -29,11 +36,27 @@ namespace TrickingLibrary.API.Controllers
             _ctx.Submissions.Where(t => t.TrickId.Equals(trickId)).ToList();
 
         [HttpPost]
-        public async Task<Submission> Create([FromBody] Submission submission)
+        public async Task<IActionResult> Create(
+            [FromBody] Submission submission,
+            [FromServices] Channel<EditVideoMessage> channel,
+            [FromServices] VideoManager videoManager)
         {
+            if (!videoManager.TemporaryVideoExists(submission.Video))
+            {
+                return BadRequest();
+            }
+            
+            submission.VideoProcessed = false;
             _ctx.Add(submission);
+            //TODO validate video path
             await _ctx.SaveChangesAsync();
-            return submission;
+            await channel.Writer.WriteAsync(new EditVideoMessage
+            {
+                SubmissionId = submission.Id,
+                Input = submission.Video
+            });
+            
+            return Ok(submission);
         }
         
         [HttpPut]

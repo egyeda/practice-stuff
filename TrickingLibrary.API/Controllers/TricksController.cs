@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TrickingLibrary.API.Form;
+using TrickingLibrary.API.ViewModels;
 using TrickingLibrary.Data;
 using TrickingLibrary.Models;
 
@@ -22,13 +23,15 @@ namespace TrickingLibrary.API.Controllers
 
         // /api/tricks
         [HttpGet]
-        public IEnumerable<Trick> All() => _ctx.Tricks.ToList();
+        public IEnumerable<object> All() => _ctx.Tricks.Select(TrickViewModels.Default).ToList();
         
         // /api/tricks/{id}
         [HttpGet("{id}")]
-        public Trick Get(string id) => 
+        public object Get(string id) => 
             _ctx.Tricks
-                .FirstOrDefault(t => t.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase));
+                .Where(t => t.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase))
+                .Select(TrickViewModels.Default)
+                .FirstOrDefault();
         
         // /api/tricks/{id}/submissions
         [HttpGet("{trickId}/submissions")]
@@ -38,7 +41,7 @@ namespace TrickingLibrary.API.Controllers
 
         // /api/tricks
         [HttpPost]
-        public async Task<Trick> Create([FromBody] TrickForm trickForm)
+        public async Task<object> Create([FromBody] TrickForm trickForm)
         {
             var trick = new Trick
             {
@@ -50,12 +53,12 @@ namespace TrickingLibrary.API.Controllers
             };
             _ctx.Add(trick);
             await _ctx.SaveChangesAsync();
-            return trick;
+            return TrickViewModels.Default.Compile().Invoke(trick);
         }
         
         // /api/tricks
         [HttpPut]
-        public async Task<Trick> Update([FromBody] Trick trick)
+        public async Task<object> Update([FromBody] Trick trick)
         {
             if (string.IsNullOrEmpty(trick.Id))
             {
@@ -63,7 +66,7 @@ namespace TrickingLibrary.API.Controllers
             }
             _ctx.Update(trick);
             await _ctx.SaveChangesAsync();
-            return trick;
+            return TrickViewModels.Default.Compile().Invoke(trick);
         }
         
          // /api/tricks/{id}

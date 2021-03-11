@@ -1,7 +1,9 @@
 ﻿const initState = () => ({
   uploadPromise: null,
   active: false,
-  component: null
+  component: null,
+  uploadCompleted: false,
+  uploadCancelSource: null
 })
 
 
@@ -13,20 +15,53 @@ export const mutations = {
     state.component = component;
   },
   hide(state){
-    state.active = true;
+    state.active = false;
   },
-  setTask(state, {uploadPromise}){
+  setTask(state, {uploadPromise, source}){
     state.uploadPromise = uploadPromise;
+    state.uploadCancelSource = source
   },
   reset(state){
     Object.assign(state, initState())
+  },
+  completeUpload(state){
+    state.uploadCompleted = true;
   }
 }
 
 export const actions = {
   startVideoUpload({commit, dispatch}, {form}){
-    const uploadPromise = this.$axios.$post("api/videos", form);
-    commit("setTask", {uploadPromise})
+    const source = this.$axios.CancelToken.source();
+    const uploadPromise = this.$axios.post("api/videos", form, {
+      progress: false,
+      cancelToken: source.token
+    })
+      .then(({data}) => {
+        console.log("data", data)
+        commit("completeUpload")
+        return data
+      })
+      .catch(err => {
+        if(this.$axios.isCancel(err)){
+          //TODO popup notify
+        }
+      })
+
+    commit("setTask", {uploadPromise, source})
+  },
+  async cancelUpload({state, commit}){
+    if(state.uploadPromise){
+      if(state.uploadCompleted){
+        commit("hide");
+        const video = await state.uploadPromise
+        await this.$axios.delete("api/videos/" + video)
+      }
+      else{
+        state.uploadCancelSource.cancel();
+      }
+    }
+
+    commit('reset');
   },
   async createSubmission({state, commit, dispatch}, {form}){
     if (!state.uploadPromise) {

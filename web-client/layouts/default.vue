@@ -1,7 +1,7 @@
 <template>
   <v-app dark>
     <v-app-bar app dense>
-      <v-toolbar-title>Tricking library</v-toolbar-title>
+      <nuxt-link class="text-h5 text--primary" style="text-decoration: none;" :to="'/'">Tricking library</nuxt-link>
 
       <v-spacer></v-spacer>
       <content-creation-dialog></content-creation-dialog>
@@ -16,6 +16,5 @@
 </template>
 
 <script>
-export default {
-}
+export default {}
 </script>
