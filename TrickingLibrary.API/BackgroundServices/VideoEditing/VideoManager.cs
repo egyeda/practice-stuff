@@ -13,27 +13,29 @@ namespace TrickingLibrary.API.BackgroundServices.VideoEditing
 
         public const string TempPrefix = "temp_";
         public const string ConvertedPrefix = "c";
+        public const string ThumbnailPrefix = "t";
         
         public VideoManager(IWebHostEnvironment env)
         {
             _env = env;
         }
 
-        public string WorkingDirectory => _env.WebRootPath;
+        private string WorkingDirectory => _env.WebRootPath;
+        public string FFMPEGPath => Path.Combine(_env.ContentRootPath, "ffmpeg", "ffmpeg.exe");
         
         public bool Temporary(string fileName)
         {
             return fileName.StartsWith(TempPrefix);
         }
         
-        public bool TemporaryVideoExists(string fileName)
+        public bool TemporaryFileExists(string fileName)
         {
             var path = TemporarySavePath(fileName);
 
             return File.Exists(path);
         }
 
-        public void DeleteTemporaryVideo(string fileName)
+        public void DeleteTemporaryFile(string fileName)
         {
             var path = TemporarySavePath(fileName);
             
@@ -46,6 +48,7 @@ namespace TrickingLibrary.API.BackgroundServices.VideoEditing
         }
 
         public string GenerateConvertedFileName() => $"{ConvertedPrefix}{DateTime.Now.Ticks}.mp4";
+        public string GenerateThumbnailFileName() => $"{ThumbnailPrefix}{DateTime.Now.Ticks}.jpg";
         
         public async Task<string> SaveTemporaryFile (IFormFile video)
         {

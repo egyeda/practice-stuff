@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TrickingLibrary.API.Form;
 using TrickingLibrary.API.ViewModels;
 using TrickingLibrary.Data;
@@ -23,21 +24,23 @@ namespace TrickingLibrary.API.Controllers
 
         // /api/tricks
         [HttpGet]
-        public IEnumerable<object> All() => _ctx.Tricks.Select(TrickViewModels.Default).ToList();
+        public IEnumerable<object> All() => _ctx.Tricks.Select(TrickViewModels.Projection).ToList();
         
         // /api/tricks/{id}
         [HttpGet("{id}")]
         public object Get(string id) => 
             _ctx.Tricks
                 .Where(t => t.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase))
-                .Select(TrickViewModels.Default)
+                .Select(TrickViewModels.Projection)
                 .FirstOrDefault();
         
         // /api/tricks/{id}/submissions
         [HttpGet("{trickId}/submissions")]
         public IEnumerable<Submission> ListSubmissionsForTrick(string trickId) => 
             _ctx.Submissions
-                .Where(t => t.TrickId.Equals(trickId, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                .Include(x => x.Video)
+                .Where(t => t.TrickId.Equals(trickId, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
 
         // /api/tricks
         [HttpPost]
@@ -53,7 +56,7 @@ namespace TrickingLibrary.API.Controllers
             };
             _ctx.Add(trick);
             await _ctx.SaveChangesAsync();
-            return TrickViewModels.Default.Compile().Invoke(trick);
+            return TrickViewModels.Create(trick);
         }
         
         // /api/tricks
@@ -66,7 +69,7 @@ namespace TrickingLibrary.API.Controllers
             }
             _ctx.Update(trick);
             await _ctx.SaveChangesAsync();
-            return TrickViewModels.Default.Compile().Invoke(trick);
+            return TrickViewModels.Create(trick);
         }
         
          // /api/tricks/{id}

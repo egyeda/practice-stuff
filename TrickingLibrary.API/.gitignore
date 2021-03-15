@@ -88,5 +88,7 @@ sw.*
 
 # Vim swap files
 *.swp
-/bin
-/obj
+
+bin/
+bin/Debug/net5.0/
+obj/

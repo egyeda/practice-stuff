@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TrickingLibrary.API.BackgroundServices;
 using TrickingLibrary.API.BackgroundServices.VideoEditing;
+using TrickingLibrary.API.Form;
 using TrickingLibrary.Data;
 using TrickingLibrary.Models;
 
@@ -37,23 +38,28 @@ namespace TrickingLibrary.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Create(
-            [FromBody] Submission submission,
+            [FromBody] SubmissionForm submissionForm,
             [FromServices] Channel<EditVideoMessage> channel,
             [FromServices] VideoManager videoManager)
         {
-            if (!videoManager.TemporaryVideoExists(submission.Video))
+            if (!videoManager.TemporaryFileExists(submissionForm.Video))
             {
                 return BadRequest();
             }
-            
+
+            var submission = new Submission()
+            {
+                TrickId = submissionForm.TrickId,
+                Description = submissionForm.Description,
+                VideoProcessed = false
+            };
             submission.VideoProcessed = false;
             _ctx.Add(submission);
-            //TODO validate video path
             await _ctx.SaveChangesAsync();
             await channel.Writer.WriteAsync(new EditVideoMessage
             {
                 SubmissionId = submission.Id,
-                Input = submission.Video
+                Input = submissionForm.Video
             });
             
             return Ok(submission);

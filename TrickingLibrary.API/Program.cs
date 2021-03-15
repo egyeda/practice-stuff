@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TrickingLibrary.Data;
 using TrickingLibrary.Models;
+using TrickingLibrary.Models.Moderation;
 
 namespace TrickingLibrary.API
 {
@@ -37,7 +38,15 @@ namespace TrickingLibrary.API
                         Name = "Backwards roll",
                         Description = "test backwards roll",
                         Difficulty = "easy",
-                        Categories = new List<TrickCategory>() { new TrickCategory { CategoryId = "flip", }}
+                        Categories = new List<TrickCategory>() {new TrickCategory {CategoryId = "flip",}}
+                    });
+                    ctx.Add(new Trick()
+                    {
+                        Id = "forwards-roll",
+                        Name = "Forwards roll",
+                        Description = "Test Forwards roll",
+                        Difficulty = "easy",
+                        Categories = new List<TrickCategory>() {new TrickCategory {CategoryId = "flip",}}
                     });
                     ctx.Add(new Trick()
                     {
@@ -45,27 +54,41 @@ namespace TrickingLibrary.API
                         Name = "Back flip",
                         Description = "test Back flip",
                         Difficulty = "medium",
-                        Categories = new List<TrickCategory>() { new TrickCategory { CategoryId = "flip", }},
-                        Prerequisites = new List<TrickRelationship>(){new TrickRelationship{PrerequisiteId = "backwards_roll"}}
+                        Categories = new List<TrickCategory>() {new TrickCategory {CategoryId = "flip",}},
+                        Prerequisites = new List<TrickRelationship>()
+                            {new TrickRelationship {PrerequisiteId = "backwards_roll"}}
                     });
                     ctx.Add(new Submission
                     {
                         TrickId = "back-flip",
                         Description = "At least I've tried.",
-                        Video = "0i3lgby2.tjr.mp4",
+                        Video = new Video()
+                        {
+                            VideoLink = "one.mp4",
+                            ThumbLink = "one.jpg"
+                        },
                         VideoProcessed = true
                     });
                     ctx.Add(new Submission
                     {
                         TrickId = "back-flip",
                         Description = "At least I've tried. 2",
-                        Video = "c1wjdzbm.egb.mp4",
+                        Video = new Video()
+                        {
+                            VideoLink = "two.mp4",
+                            ThumbLink = "two.jpg"
+                        },
                         VideoProcessed = true
+                    });
+                    ctx.Add(new ModerationItem
+                    {
+                        Target = "forwards-roll",
+                        Type = ModerationTypes.Trick
                     });
                     ctx.SaveChanges();
                 }
             }
-            
+
             host.Run();
         }
 

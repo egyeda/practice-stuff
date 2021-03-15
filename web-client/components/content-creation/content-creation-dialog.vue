@@ -19,10 +19,6 @@
     <div v-if="component">
       <component :is="component"></component>
     </div>
-
-    <div class="d-flex justify-center my-4">
-      <v-btn @click="cancelUpload">Close</v-btn>
-    </div>
   </v-dialog>
 </template>
 <script>
@@ -47,7 +43,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('video-upload', ['cancelUpload']),
     ...mapMutations('video-upload', ["activate"]),
   }
 }

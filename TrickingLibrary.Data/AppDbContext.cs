@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TrickingLibrary.Models;
+using TrickingLibrary.Models.Moderation;
 
 namespace TrickingLibrary.Data
 {
@@ -15,6 +16,9 @@ namespace TrickingLibrary.Data
         public DbSet<TrickRelationship> TrickRelationships { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<TrickCategory> TrickCategories { get; set; }
+        public DbSet<Video> Videos { get; set; }
+        public DbSet<ModerationItem> ModerationItems { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,5 +40,5 @@ namespace TrickingLibrary.Data
                 .WithMany(x => x.Progressions)
                 .HasForeignKey(x => x.PrerequisiteId);
         }
-    }
+    } 
 }
